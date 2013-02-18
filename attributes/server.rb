@@ -24,8 +24,8 @@ default['logstash']['server']['outputs'] = []
 
 case
 when platform_family?("rhel")
-  node['logstash']['server']['zeromq_packages'] = [ "zeromq",  "zeromq-devel"]
+  default['logstash']['server']['zeromq_packages'] = [ "zeromq",  "zeromq-devel"]
 when platform_family?("debian")
-  node['logstash']['server']['zeromq_packages'] = [ "zeromq",  "libzmq-dev"]
+  default['logstash']['server']['zeromq_packages'] = [ "zeromq",  "libzmq-dev"]
 end
   
