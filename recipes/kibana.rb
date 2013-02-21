@@ -23,6 +23,10 @@ rbenv_gem "bundler" do
   ruby_version "1.9.3-p194"
 end
 
+ruby_gem "gems"
+
+ruby_gem "daemons"
+
 if Chef::Config[:solo]
   es_server_ip = node['logstash']['elasticsearch_ip']
 else
