@@ -25,32 +25,32 @@ export RACK_ENV="production"
 mkdir -p $PID_DIR $LOG_DIR
 chown -R kibana:kibana $PID_DIR $LOG_DIR
 
-#KIBANA_CMD="cd $KIBANA_HOME && source ~/.bash_profile && bundle exec ruby kibana-daemon.rb $1"
-KIBANA_CMD="cd $KIBANA_HOME && /opt/rbenv/versions/*/bin/bundle exec ruby kibana-daemon.rb $1"
+#KIBANA_CMD="cd $KIBANA_HOME && /opt/rbenv/versions/*/bin/bundle exec ruby kibana-daemon.rb $1"
+KIBANA_CMD="cd $KIBANA_HOME && source ~/.bash_profile && bundle exec ruby kibana-daemon.rb $1"
 
 case "$1" in
 start)
-  su kibana -c "$KIBANA_CMD"
+  su - $USER -c "$KIBANA_CMD"
   RETVAL=$?
 ;;
 
 stop)
-  su kibana -c "$KIBANA_CMD"
+  su - $USER -c "$KIBANA_CMD"
   RETVAL=$?
 ;;
 
 restart)
-  su kibana -c "$KIBANA_CMD"
+  su - $USER -c "$KIBANA_CMD"
   RETVAL=$?
 ;;
 
 status)
-  su kibana -c "$KIBANA_CMD"
+  su - $USER -c "$KIBANA_CMD"
 ;;
 
 force-reload)
-  su kibana -c "cd $KIBANA_HOME && source ~/.bash_profile && bundle exec kibana-daemon.rb zap"
-  su kibana -c "cd $KIBANA_HOME && source ~/.bash_profile && bundle exec kibana-daemon.rb start"
+  su - $USER -c "cd $KIBANA_HOME && bundle exec kibana-daemon.rb zap"
+  su - $USER -c "cd $KIBANA_HOME && bundle exec kibana-daemon.rb start"
   RETVAL=$?
 ;;
 
