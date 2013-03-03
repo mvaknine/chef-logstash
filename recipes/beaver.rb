@@ -138,6 +138,12 @@ node['logstash']['beaver']['outputs'].each do |outs|
         host = hash['host'] || logstash_server_ip || 'localhost'
         port = hash['port'] || '2120'
         conf['zeromq_address'] = "tcp://#{host}:#{port}"
+      when "udp" then
+        outputs << "udp"
+        host = hash['host'] || logstash_server_ip || 'localhost'
+        port = hash['port'] || '3514'
+        conf['udp_host'] = host
+        conf['udp_port'] = port
       else
         log("output type not supported: #{name}") { level :warn }
     end
@@ -157,7 +163,7 @@ template conf_file do
   owner node['logstash']['user']
   group node['logstash']['group']
   variables(
-            :conf => conf,  
+            :conf => conf,
             :files => files
   )
   notifies :restart, "service[logstash_beaver]"
