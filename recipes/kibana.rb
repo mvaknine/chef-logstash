@@ -6,6 +6,12 @@ kibana_home = node['logstash']['kibana']['home']
 kibana_log_dir = node['logstash']['kibana']['log_dir']
 kibana_pid_dir = node['logstash']['kibana']['pid_dir']
 
+user "kibana" do
+  supports :manage_home => true
+  home "/home/kibana"
+  shell "/bin/bash"
+end
+
 include_recipe "rbenv::default"
 include_recipe "rbenv::ruby_build"
 
@@ -38,12 +44,6 @@ es_server_port = node['logstash']['elasticsearch_port'].empty? ? '9200' : node['
 case node['logstash']['kibana']['language'].downcase
 when "ruby"
 
-  user "kibana" do
-    supports :manage_home => true
-    home "/home/kibana"
-    shell "/bin/bash"
-  end
-  
   node.set[:rbenv][:group_users] = [ "kibana" ]
 
   [ kibana_pid_dir, kibana_log_dir ].each do |dir|
