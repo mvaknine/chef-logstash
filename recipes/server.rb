@@ -129,7 +129,7 @@ template "#{node['logstash']['basedir']}/server/etc/logstash.conf" do
 end
 
 if platform_family? "debian"
-  if node["platform_version"] == "12.04"
+  if node["platform_version"] == "12.04" and ! node['logstash']['server']['init'] == "runit"
     template "/etc/init/logstash_server.conf" do
       mode "0644"
       source "logstash_server.conf.erb"

@@ -207,11 +207,6 @@ if use_upstart
     provider Chef::Provider::Service::Upstart
   end
 else
-  service "logstash_beaver" do
-    supports :restart => true, :reload => false, :status => true
-    action [:enable, :start]
-  end
-
   template "/etc/init.d/logstash_beaver" do
     mode "0755"
     source "init-beaver.erb"
@@ -223,6 +218,11 @@ else
               :platform => node['platform']
               )
     notifies :restart, "service[logstash_beaver]"
+  end
+
+  service "logstash_beaver" do
+    supports :restart => true, :reload => false, :status => true
+    action [:enable, :start]
   end
 end
 
