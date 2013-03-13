@@ -65,8 +65,8 @@ when "ruby"
   # for some annoying reason Gemfile.lock is shipped w/ kibana
   file "gemfile_lock" do
     path  "#{node['logstash']['kibana']['basedir']}/#{node['logstash']['kibana']['sha']}/Gemfile.lock"
-    #action :delete
-    action :nothing
+    action :delete
+    #action :nothing
   end
 
   git "#{node['logstash']['kibana']['basedir']}/#{node['logstash']['kibana']['sha']}" do
@@ -75,7 +75,7 @@ when "ruby"
     action :sync
     user 'kibana'
     group 'kibana'
-    #notifies :delete, "file[gemfile_lock]", :immediately
+    notifies :delete, "file[gemfile_lock]", :immediately
   end
 
   link kibana_home do

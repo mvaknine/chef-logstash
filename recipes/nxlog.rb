@@ -7,8 +7,8 @@ pkgs = value_for_platform(
     ["redhat","centos","fedora","scientific"] =>
         {"default" => %w{ TODO }},
     [ "debian", "ubuntu" ] =>
-        {"default" => %w{ libpcre3-dev libapr1-dev }},
-    "default" => %w{ libpcre3-dev libapr1-dev }
+        {"default" => %w{ libpcre3-dev libapr1-dev libcurl4-openssl-dev libexpat1-dev }},
+    "default" => %w{ libpcre3-dev libapr1-dev libcurl4-openssl-dev libexpat1-dev }
   )
 
 pkgs.each do |pkg|
