@@ -3,6 +3,9 @@
 
 include_recipe "build-essential"
 
+directory "/usr/local/etc/nxlog"
+directory "/usr/local/etc/nxlog/include"
+
 pkgs = value_for_platform(
     ["redhat","centos","fedora","scientific"] =>
         {"default" => %w{ TODO }},
@@ -56,7 +59,7 @@ else
   logstash_server_ip = logstash_server_results[0]['ipaddress']
 end
 
-template "/usr/local/etc/nxlog.conf" do
+template "/usr/local/etc/nxlog/nxlog.conf" do
   variables(
     :tcphost =>  logstash_server_ip,
     :tcpport =>  "5959"
