@@ -62,7 +62,8 @@ end
 template "/usr/local/etc/nxlog/nxlog.conf" do
   variables(
     :tcphost =>  logstash_server_ip,
-    :tcpport =>  "5959"
+    :tcpport =>  "5959", 
+    :udpport =>  "5556"
   )
   notifies :restart, "service[nxlog]"
 end

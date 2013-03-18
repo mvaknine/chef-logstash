@@ -1,55 +1,41 @@
 PidFile /var/run/nxlog.pid
 
 <Extension syslog>
-  Module  xm_syslog
+  Module xm_syslog
 </Extension>
 
 <Extension json>
   Module  xm_json
 </Extension>
 
-<Input internal>
-  Module      im_internal
+<Input chef-client>
+  Module      im_file
+  File        "/etc/sv/chef-client/log/main/current"
+  exec $type = "chef_client";
+  exec $host = hostname();
+  exec $message = $raw_event;
+  exec        to_json();
 </Input>
 
 <Input messages>
   Module      im_file
-  File        '/var/log/messages'
-  Exec        parse_syslog();
-</Input>
-
-include /usr/local/etc/nxlog/include
-
-<Input syslogs>
-  Module      im_file
-  File        '/var/log/syslog'
-  Exec parse_syslog();
-</Input>
-
-<Input chef-client>
-  Module      im_file
-  File        '/etc/sv/chef-client/log/main/current'
-</Input>
-
-<Input otherlogs>
-  Module      im_file
-  File        '/var/log/*.log'
-  Exec parse_syslog();
+  File        "/var/log/messages"
+  exec $type = "messages";
+  exec $host = hostname();
+  exec $message = $raw_event;
+  exec        to_json();
 </Input>
 
 <Output out>
-  Module      om_tcp
-  Port        <%=@tcpport%>
+  Module      om_udp
+  Port        <%=@udpport%>
   Host        <%=@tcphost%>
-  Exec        to_json();
-</Output>
-
-<Output debugfile>
-  Module      om_file
-  File        "/var/log/nxlog_messages"
-  OutputType  LineBased
+  exec        to_json();
 </Output>
 
 <Route 1>
-  Path      internal, otherlogs, messages, syslogs, chef-client   => out
+  Path  chef-client, messages => out 
 </Route>
+
+include /usr/local/etc/nxlog/include/nxlog_nginx.inc
+
