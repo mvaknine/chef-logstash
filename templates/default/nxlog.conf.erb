@@ -9,21 +9,23 @@ PidFile /var/run/nxlog.pid
 </Extension>
 
 <Input chef-client>
-  Module      im_file
-  File        "/etc/sv/chef-client/log/main/current"
-  exec $type = "chef_client";
-  exec $host = hostname();
-  exec $message = $raw_event;
-  exec        to_json();
+  Module    im_file
+  File      "/etc/sv/chef-client/log/main/current"
+  exec      $type = "chef_client";
+  exec      $host = hostname();
+  exec      $tags = "write";
+  exec      $message = $raw_event;
+  exec      to_json();
 </Input>
 
 <Input messages>
-  Module      im_file
-  File        "/var/log/messages"
-  exec $type = "messages";
-  exec $host = hostname();
-  exec $message = $raw_event;
-  exec        to_json();
+  Module    im_file
+  File      "/var/log/messages"
+  exec      $type = "messages";
+  exec      $host = hostname();
+  exec      $tags = "write";
+  exec      $message = $raw_event;
+  exec      to_json();
 </Input>
 
 <Output out>
@@ -38,4 +40,6 @@ PidFile /var/run/nxlog.pid
 </Route>
 
 include /usr/local/etc/nxlog/include/nxlog_nginx.inc
+include /usr/local/etc/nxlog/include/nxlog_apache.inc
+include /usr/local/etc/nxlog/include/nxlog_tomcat6.inc
 
