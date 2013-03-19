@@ -12,29 +12,21 @@ PidFile /var/run/nxlog.pid
   Module      im_internal
 </Input>
 
-<Input messages>
-  Module      im_file
-  File        '/var/log/messages'
+<Input kern>
+  Module      im_kernel
   Exec        parse_syslog();
 </Input>
 
 include /usr/local/etc/nxlog/include
 
-<Input syslogs>
-  Module      im_file
-  File        '/var/log/syslog'
-  Exec parse_syslog();
+<Input syslog>
+  Module  im_uds
+  uds     /dev/log
 </Input>
 
 <Input chef-client>
   Module      im_file
   File        '/etc/sv/chef-client/log/main/current'
-</Input>
-
-<Input otherlogs>
-  Module      im_file
-  File        '/var/log/*.log'
-  Exec parse_syslog();
 </Input>
 
 <Output out>
@@ -51,5 +43,5 @@ include /usr/local/etc/nxlog/include
 </Output>
 
 <Route 1>
-  Path      internal, otherlogs, messages, syslogs, chef-client   => out
+  Path      internal, syslog, kern, chef-client   => out
 </Route>
