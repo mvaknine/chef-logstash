@@ -19,7 +19,7 @@ PidFile /var/run/nxlog.pid
 
 include /usr/local/etc/nxlog/include
 
-<Input syslog>
+<Input syslogsock>
   Module  im_uds
   uds     /dev/log
 </Input>
@@ -37,7 +37,7 @@ include /usr/local/etc/nxlog/include
 </Output>
 
 <Route 1>
-  Path      internal, otherlogs, messages, syslogs, chef-client   => out
+  Path      internal, kern, syslogsock, chef-client   => out
 </Route>
 
 include /usr/local/etc/nxlog/include/nxlog_nginx.inc
