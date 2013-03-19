@@ -15,9 +15,9 @@ PidFile /var/run/nxlog.pid
 <Input kern>
   Module      im_kernel
   Exec        parse_syslog();
-  Exec        $tags = "noindex, write";
+  Exec        $tags = "noindex,write";
   Exec        $message = $raw_event;
-  #Exec        to_json();
+  Exec        to_json();
 </Input>
 
 include /usr/local/etc/nxlog/include
@@ -26,9 +26,9 @@ include /usr/local/etc/nxlog/include
   Module      im_uds
   uds         /dev/log
   Exec        parse_syslog();
-  Exec        $tags = "noindex, write";
+  Exec        $tags = "noindex,write";
   Exec        $message = $raw_event;
-  #Exec        to_json();
+  Exec        to_json();
 </Input>
 
 <Input chef-client>
@@ -36,7 +36,7 @@ include /usr/local/etc/nxlog/include
   File        '/etc/sv/chef-client/log/main/current'
   Exec        $tags = "noindex,write";
   Exec        $message = $raw_event;
-  #Exec        to_json();
+  Exec        to_json();
 </Input>
 
 include /usr/local/etc/nxlog/include/nxlog_tomcat6.inc
@@ -47,9 +47,7 @@ include /usr/local/etc/nxlog/include/nxlog_apache.inc
   Module      om_udp
   Port        <%=@udpport%>
   Host        <%=@tcphost%>
-  Exec        rename_field("tags", "@tags");
-  Exec        rename_field("message", "@message");
-  Exec        to_json();
+  #Exec        to_json();
 </Output>
 
 <Route 1>
