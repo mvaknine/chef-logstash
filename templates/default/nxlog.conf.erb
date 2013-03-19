@@ -30,18 +30,17 @@ include /usr/local/etc/nxlog/include
 </Input>
 
 <Output out>
-  Module      om_tcp
-  Port        <%=@tcpport%>
+  Module      om_udp
+  Port        <%=@udpport%>
   Host        <%=@tcphost%>
   Exec        to_json();
 </Output>
 
-<Output debugfile>
-  Module      om_file
-  File        "/var/log/nxlog_messages"
-  OutputType  LineBased
-</Output>
-
 <Route 1>
-  Path      internal, syslog, kern, chef-client   => out
+  Path      internal, otherlogs, messages, syslogs, chef-client   => out
 </Route>
+
+include /usr/local/etc/nxlog/include/nxlog_nginx.inc
+include /usr/local/etc/nxlog/include/nxlog_apache.inc
+include /usr/local/etc/nxlog/include/nxlog_tomcat6.inc
+

@@ -5,6 +5,9 @@ include_recipe "build-essential"
 
 directory "/usr/local/etc/nxlog"
 directory "/usr/local/etc/nxlog/include"
+file "/usr/local/etc/nxlog/include/nxlog_nginx.inc"
+file "/usr/local/etc/nxlog/include/nxlog_apache.inc"
+file "/usr/local/etc/nxlog/include/nxlog_tomcat6.inc"
 
 pkgs = value_for_platform(
     ["redhat","centos","fedora","scientific"] =>
@@ -62,7 +65,8 @@ end
 template "/usr/local/etc/nxlog/nxlog.conf" do
   variables(
     :tcphost =>  logstash_server_ip,
-    :tcpport =>  "5959"
+    :tcpport =>  "5959", 
+    :udpport =>  "5556"
   )
   notifies :restart, "service[nxlog]"
 end
