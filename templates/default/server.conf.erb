@@ -23,7 +23,6 @@ output {
   <% if @enable_embedded_es -%>
       elasticsearch {
                 'embedded' => true
-                'exclude_tags' => 'noindex'
                 }
   <% elsif not @es_server_ip.empty? -%>
   elasticsearch { host => "<%= @es_server_ip %>" cluster => "<%= @es_cluster %>" tags = "index" }
