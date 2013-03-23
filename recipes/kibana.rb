@@ -104,6 +104,8 @@ when "ruby"
     mode "755"
     variables(
               :kibana_home => kibana_home,
+              :pid_dir => kibana_pid_dir,
+              :log_dir => kibana_log_dir,
               :user => 'kibana'
               )
   end
