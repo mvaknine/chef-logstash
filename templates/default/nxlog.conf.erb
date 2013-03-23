@@ -15,7 +15,7 @@ PidFile /var/run/nxlog.pid
 <Input kern>
   Module      im_kernel
   Exec        parse_syslog();
-  Exec        $tags = "noindex,write";
+  Exec        $tags = "write";
   Exec        $message = $raw_event;
   Exec        to_json();
 </Input>
@@ -25,14 +25,13 @@ include /usr/local/etc/nxlog/include
 <Input syslogsock>
   Module      im_uds
   uds         /dev/log
-  Exec        parse_syslog();
-  Exec        $tags = "write";
-  Exec        $message = $raw_event;
+  Exec        parse_syslog_bsd();
+  Exec        $tags = "Write";
+  Exec        rename_field($Message, $message);
   Exec        $host = $Hostname;  
   Exec        $type = $SyslogFacility;
   Exec        to_json();
-  Exec        if $raw_event =~ /SERVICE CHECK/ { drop(); }
-  Exec        if $raw_event =~ /ELB-HealthChecker/ { drop(); }
+  Exec        if $raw_event =~ /SERVICE CHECK/ or $raw_event =~ /ELB-HealthChecker/ { drop(); }
 </Input>
 
 <Input chef-client>
@@ -50,10 +49,9 @@ include /usr/local/etc/nxlog/include/nxlog_nginx.inc
 include /usr/local/etc/nxlog/include/nxlog_apache.inc
 
 <Output out>
-  Module      om_udp
-  Port        <%=@udpport%>
+  Module      om_tcp
+  Port        <%=@tcpport%>
   Host        <%=@tcphost%>
-  #Exec        to_json();
 </Output>
 
 <Route 1>
