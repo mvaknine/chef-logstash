@@ -31,7 +31,7 @@ include /usr/local/etc/nxlog/include
   Exec        $host = $Hostname;  
   Exec        $type = $SyslogFacility;
   Exec        to_json();
-  Exec        if $raw_event =~ /SERVICE CHECK/ or $raw_event =~ /ELB-HealthChecker/ { drop(); }
+  Exec        if $raw_event =~ /SERVICE CHECK/ or $raw_event =~ /ELB-HealthChecker/ or $raw_event =~ /- - -/ { drop(); }
 </Input>
 
 <Input chef-client>
