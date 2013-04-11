@@ -54,7 +54,7 @@ bash "compile-nxlog" do
   creates "/usr/local/bin/nxlog"
 end
 
-logstash_server_results = search(:node, "roles:#{node['logstash']['beaver']['server_role']}")
+logstash_server_results = search(:node, "roles:#{node['logstash']['beaver']['server_role']} AND chef_environment:#{node.chef_environment}")
 
 if logstash_server_results.empty? then
   logstash_server_ip = "127.0.0.1"
