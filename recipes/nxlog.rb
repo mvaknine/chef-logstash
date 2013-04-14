@@ -1,6 +1,8 @@
 # Yet another very lightweight shipper
 #
 
+return if node.name == "chef.anyclipsrv.info"
+
 include_recipe "build-essential"
 
 directory "/usr/local/etc/nxlog"
