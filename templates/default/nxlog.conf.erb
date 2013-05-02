@@ -20,19 +20,18 @@ PidFile /var/run/nxlog.pid
   Exec        to_json();
 </Input>
 
-include /usr/local/etc/nxlog/include
-
-#<Input syslogsock>
-#  Module      im_uds
-#  uds         /dev/log
-#  Exec        parse_syslog_bsd();
-#  Exec        $tags = "Write";
-#  Exec        rename_field($Message, $message);
-#  Exec        $host = $Hostname;  
-#  Exec        $type = $SyslogFacility;
-#  Exec        to_json();
-#  Exec        if $raw_event =~ /SERVICE CHECK/ or $raw_event =~ /ELB-HealthChecker/ or $raw_event =~ /- - -/ { drop(); }
-#</Input>
+<Input syslogsock>
+  Module      im_uds
+  uds         /dev/log
+  Exec        parse_syslog_bsd();
+  Exec        $tags = "Write";
+  Exec        rename_field($Message, $message);
+  Exec        $host = $Hostname;  
+  Exec        $type = $SyslogFacility;
+  Exec        to_json();
+  FlowControl False
+  Exec        if $raw_event =~ /SERVICE CHECK/ or $raw_event =~ /ELB-HealthChecker/ or $raw_event =~ /- - -/ { drop(); }
+</Input>
 
 <Input chef-client>
   Module      im_file
@@ -44,9 +43,13 @@ include /usr/local/etc/nxlog/include
   Exec        to_json();
 </Input>
 
-include /usr/local/etc/nxlog/include/nxlog_tomcat6.inc
-include /usr/local/etc/nxlog/include/nxlog_nginx.inc
-include /usr/local/etc/nxlog/include/nxlog_apache.inc
+include /usr/local/etc/nxlog/include/*.inc
+
+<Output local>
+Module om_file
+  File "/var/log/messages"
+  Exec to_syslog_bsd();
+</Output>
 
 <Output out>
   Module      om_tcp
@@ -55,6 +58,11 @@ include /usr/local/etc/nxlog/include/nxlog_apache.inc
 </Output>
 
 <Route 1>
-  Path      internal, kern, chef-client   => out
+  Path syslogsock, kern => local
 </Route>
+  
+<Route 2>
+  Path      internal, kern, chef-client, syslogsock => out
+</Route>
+
 

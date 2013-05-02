@@ -7,9 +7,6 @@ include_recipe "build-essential"
 
 directory "/usr/local/etc/nxlog"
 directory "/usr/local/etc/nxlog/include"
-file "/usr/local/etc/nxlog/include/nxlog_nginx.inc"
-file "/usr/local/etc/nxlog/include/nxlog_apache.inc"
-file "/usr/local/etc/nxlog/include/nxlog_tomcat6.inc"
 
 pkgs = value_for_platform(
     ["redhat","centos","fedora","scientific"] =>
@@ -37,7 +34,7 @@ nxlog_version = node['logstash']['nxlog']['version']
 
 remote_file "#{Chef::Config[:file_cache_path]}/nxlog-ce-#{nxlog_version}.tar.gz" do
   source "#{node['logstash']['nxlog']['url']}/nxlog-ce-#{nxlog_version}.tar.gz"
-  checksum node['logstash']['nxlog']['checksum']
+#  checksum node['logstash']['nxlog']['checksum']
   action :create_if_missing
 end
 
